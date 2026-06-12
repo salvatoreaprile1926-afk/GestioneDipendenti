@@ -1,44 +1,47 @@
-package controller;
-
-import repository.DipendenteService;
-import repository.TitoloService;
-import repository.RuoloService;
-import view.VistaDipendenti;
-import view.VistaUtilita;
+import view.*;
+import controller.*;
+import repository.*;
 
 public class Avvio {
-	
+
 	public static void main(String[] args) {
-		// 1. CREIAMO LE VISTE (Interfaccia utente)
-        VistaUtilita vistaUtilita = new VistaUtilita();
-        VistaDipendenti vistaDipendenti = new VistaDipendenti();
 
-        // 2. CREIAMO I SERVIZI (Logica e gestione dati)
-        DipendenteService dipendenteService = new DipendenteService();
-        TitoloService titoloService = new TitoloService();
-        RuoloService ruoloService = new RuoloService();
-        
-        // 3. CREIAMO IL CONTROLLER PRINCIPALE
-        // Passiamo tutti i servizi e le viste al costruttore del DipendenteController
-        DipendenteController dipendenteController = new DipendenteController(
-            dipendenteService, 
-            titoloService, 
-            ruoloService, 
-            vistaDipendenti, 
-            vistaUtilita
-        );
-        
-        // Se hai creato anche gli altri due controller (Titolo e Ruolo), 
-        // in futuro potrai istanziarli qui sotto nello stesso modo.
+		VistaUtilita vistaUtilita = new VistaUtilita();
 
-        // 4. ACCENDIAMO IL PROGRAMMA
-        vistaUtilita.mostraMessaggio("=== Benvenuto nel Sistema Gestionale 2026 ===");
-        
-        // Facciamo partire il ciclo del menu principale
-        dipendenteController.avvia(); 
-        
-        // Quando l'utente decide di uscire dal menu, il programma arriverà qui e si chiuderà
-        vistaUtilita.mostraMessaggio("Applicazione chiusa correttamente. Arrivederci!");
+		DipendenteService dipendenteService = new DipendenteService();
+		RuoloService ruoloService = new RuoloService();
+		TitoloService titoloService = new TitoloService();
+
+
+		DipendenteController dipendenteController = new DipendenteController(dipendenteService, titoloService, ruoloService, vistaUtilita);
+		RuoloAziendaleController ruoloController = new RuoloAziendaleController(ruoloService, vistaUtilita);
+		TitoloStudioController titoloController = new TitoloStudioController(titoloService, vistaUtilita);
+
+		int scelta;
+		do {
+			vistaUtilita.menuPrincipale();
+			scelta = vistaUtilita.leggiIntero("Scegli: ");
+			switch(scelta) {
+			case 1:
+				dipendenteController.avvia();
+				break;
+			case 2:
+				ruoloController.avvio();
+				break;
+			case 3:
+				titoloController.avvio();
+				break;
+			case 4:
+				vistaUtilita.visualizzaMessaggio("Programma Terminato");
+				break;
+			default:
+				vistaUtilita.visualizzaMessaggio("Scelta non valida");
+			}
+
+		}
+		while(scelta != 4 );
 	}
-	
+
+
+
 }
