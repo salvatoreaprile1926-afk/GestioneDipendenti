@@ -1,27 +1,29 @@
 package repository;
 
 import java.util.ArrayList;
+
 import model.TitoloStudio;
 
 public class TitoloService {
-
 	ArrayList<TitoloStudio> titoli = new ArrayList<>();
-	
-	public void inserisciDipendente(TitoloStudio titolo) {
+
+	public void inserisciTitolo(TitoloStudio titolo) {
 		titoli.add(titolo);
 	}
-	
+
+	//serve a restituire le persone salvate nella arraylist persone, diventa l'indirizzo di memoria dell'arraylist persone
 	public ArrayList<TitoloStudio> leggiTitolo(){
 		return titoli;
 	}
-	
+
 	public TitoloStudio cercaPerId(int id) {
-		for( TitoloStudio titolo: titoli) {
+		for (TitoloStudio titolo : titoli) {
 			if(titolo.getId()==id) {
 				return titolo;
-				}
-			
 			}
+
+		}
 		return null;
 	}
+	
 }
