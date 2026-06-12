@@ -1,55 +1,84 @@
-package controller;
+package repository;
 
-import repository.DipendenteService;
-import repository.TitoloService;
-import repository.RuoloService;
-import view.VistaDipendenti;
-import view.VistaUtilita;
+import java.util.ArrayList;
+import model.Dipendente;
 
+public class DipendenteService {
 
-public class DipendenteController {
-	
-	private DipendenteService dipendenteService;
-	private TitoloService titoloService;
-	private RuoloService ruoloService;
-	private VistaDipendenti vistaDipendenti;
-	private VistaUtilita vistaUtilita;
-	
-	public DipendenteController (DipendenteService dipendenteService, TitoloService titoloService, RuoloService ruoloService, 
-			VistaDipendenti vistaDipendenti, VistaUtilita vistaUtilita) {
-		
-		this.dipendenteService = dipendenteService;
-	    this.titoloService = titoloService;
-	    this.ruoloService = ruoloService;
-	    this.vistaDipendenti = vistaDipendenti;
-	    this.vistaUtilita = vistaUtilita;
+	private ArrayList<Dipendente> dipendenti = new ArrayList<>();
+
+	public void inserisciDipendente(Dipendente dipendente) {
+		dipendenti.add(dipendente);
 	}
 
-	public void avvia() {
-		boolean esci = false;
-	
-			while (!esci) {
-		// 1. Mostriamo il menu e prendiamo la scelta (metodo che dovrà essere nella tua Vista)
-				int scelta = vistaDipendenti.menuDipendenti();
-		
-		// 2. Lo switch-case che decide cosa fare in base al numero premuto
-				switch (scelta) {
-					case 1:
-				// codice per mostrare i dipendenti
-				vistaUtilita.menuPrincipale("Hai scelto di vedere i dipendenti");
-						break;
-					case 2:
-				// codice per aggiungere un dipendente
-				vistaUtilita.menuPrincipale("Hai scelto di aggiungere un dipendente");
-						break;
-					case 0:
-				vistaUtilita.menuPrincipale("Uscita dal programma...");
-						esci = true; // Fa terminare il ciclo while
-						break;
-					default:
-				vistaUtilita.menuPrincipale("Opzione non valida, riprova.");
-}
+	// Serve a restituire i dipendenti salvati nell'arraylist dipendenti
+	public ArrayList<Dipendente> leggiDipendente(){
+		return dipendenti;
 	}
-}
 
-}
+	public Dipendente cercaPerId(int id) {
+		for (Dipendente dipendente : dipendenti) {
+			if(dipendente.getId() == id) {
+				return dipendente;
+			}
+		}
+		return null;
+	}
+
+	// METODO AGGIUNTO PER L'ELIMINAZIONE
+	public void eliminaDipendente(Dipendente dipendente) {
+		dipendenti.remove(dipendente);
+	}
+
+	// NUOVO METODO PER LA MODIFICA
+	public void modificaDipendente(Dipendente dipCopia) {
+		Dipendente originale = cercaPerId(dipCopia.getId());
+		if (originale != null) {
+			originale.setNome(dipCopia.getNome());
+			originale.setCognome(dipCopia.getCognome());
+			originale.setLuogoNascita(dipCopia.getLuogoNascita());
+			originale.setDataNascita(dipCopia.getDataNascita());
+			originale.setCodiceFiscale(dipCopia.getCodiceFiscale());
+			originale.setSesso(dipCopia.getSesso());
+			originale.setStipendio(dipCopia.getStipendio());
+			originale.setIdTitolo(dipCopia.getIdTitolo());
+			originale.setIdRuolo(dipCopia.getIdRuolo());
+		}
+	}
+	
+	// METODO PER CERCARE I DIPENDENTI TRAMITE IL NOME
+//	public ArrayList<Dipendente> cercaPerNome(String nomeCercato){
+//		// Creiamo una lista vuota per contenere i dipendenti trovati
+//		ArrayList<Dipendente> risultati = new ArrayList<>();
+//		
+//		// Scorriamo tutti i dipendenti nel nostro archivio
+//		for (Dipendente dipendente : dipendenti) {
+//			// Usiamo equalsIgnoreCase così trova il nome sia se scritto maiuscolo che minuscolo
+//			if (dipendente.getNome().equalsIgnoreCase(nomeCercato)) {
+//					risultati.add(dipendente); // Trovato! Lo aggiungiamo alla lista dei risultati
+//	
+//			}
+//		}
+		// Restituiamo la lista (sarà vuota se non ha trovato nessuno)
+//		return risultati;
+//	}
+	
+	//NUOVO METODO: FILTRO PER NOME (Trova anche corrispondenze parziali)
+	public ArrayList<Dipendente> filtraPerNome (String lettereCercate){
+			ArrayList<Dipendente> risultati = new ArrayList<>();
+			
+			
+			// Trasformiamo la stringa cercata in minuscolo per non fare confusione tra MAIUSCOLE e minuscole
+			String ricercaMinuscola = lettereCercate.toLowerCase();
+			
+			for (Dipendente dipendente : dipendenti) {
+				// Prendiamo il nome del dipendente, lo trasformiamo in minuscolo e vediamo se CONTIENE le lettere cercate
+				if (dipendente.getNome().toLowerCase().contains(ricercaMinuscola)) {
+						risultati.add(dipendente); // Se le contiene, lo aggiungiamo ai risultati
+				}
+			}
+			
+			return risultati;
+	}
+	
+	}
